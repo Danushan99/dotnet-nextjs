@@ -1,35 +1,71 @@
-# Identity Service
-Backend for Kithu community actions.
+# KITHU Identity & Salary Platform
 
-Next Steps for You:
+A minimalist, high-end platform for anonymous salary sharing, community verification, and statistical insights.
 
-Navigate to apps/kithu.
-Run docker-compose up -d to start the database.
-Navigate to apps/kithu/IdentityService.Api.
-Run dotnet run.
-Open the Swagger UI URL shown in the terminal.
-See walkthrough.md for detailed verification steps.
+## Project Structure
 
-{
-  "email": "test@gmail.com",
-  "password": "test@123"
-}
+-   `/IdentityService.Api`: .NET 10 Web API Backend.
+-   `/web`: Next.js 15 Frontend with Tailwind CSS.
+-   `docker-compose.yml`: Infrastructure (PostgreSQL).
 
-2. View Tables & Data (To see "Users" table)
-While looking at the identity_db container, click on the Exec or Terminal tab.
-Type this command to connect to the database:
-psql -U admin -d identity_db
-To list all tables, type:
-\dt
-To view data in the Users table (quotes are required!):
-SELECT * FROM "Users";
-To exit, type \q.
+---
 
+## 🛠️ Getting Started
 
-Stop the backend (Ctrl+C).
-Reset the Docker Database:
-docker-compose down -v
+### 1. Prerequisites
+- Docker & Docker Compose
+- .NET 10 SDK
+- Node.js 18+ & npm
+
+### 2. Database Setup
+Start the PostgreSQL database using Docker:
+```bash
 docker-compose up -d
-(The -v is important—it deletes the old data so the new table can be created).
-Start the backend again:
+```
+
+### 3. Backend Setup
+Navigate to the API directory and run the service:
+```bash
+cd IdentityService.Api
 dotnet run
+```
+- **Swagger UI**: Accessible at `http://localhost:5000/swagger`
+- **Database Reset**: If you update models, run `docker-compose down -v && docker-compose up -d` to refresh the schema.
+
+### 4. Frontend Setup
+Navigate to the web directory and start the dev server:
+```bash
+cd web
+npm install
+npm run dev
+```
+- **App URL**: `http://localhost:3000`
+
+---
+
+## 🚀 Key Features
+
+### 💰 Salary Transparency
+- **Anonymous Submission**: No login required to share salary data.
+- **Community Voting**: Upvote or Downvote entries to establish a **Trust Score**.
+- **Insights**: Aggregated statistics (Average, Median, P25, P75) based on approved data.
+
+### 🛡️ Moderation
+- Users can moderate submissions directly from the **Salary Details** page.
+- Statuses: `PENDING` (Default), `APPROVED`, `REJECTED`.
+- Only `APPROVED` data is included in the **Insights** calculations.
+
+---
+
+## 💾 Administration via CLI
+To manually inspect data:
+1. Connect to Docker container: `docker exec -it <container_id> psql -U admin -d identity_db`
+2. List tables: `\dt`
+3. View Salaries: `SELECT * FROM "SalarySubmissions";`
+
+---
+
+## 🎨 Design Principles
+- **Minimalist Aesthetic**: Pure black and white design system.
+- **Premium UX**: Smooth transitions, card-based layouts, and absolute clarity.
+- **Security First**: JWT-based authentication for sensitive community actions.
