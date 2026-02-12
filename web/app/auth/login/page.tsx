@@ -32,7 +32,17 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white relative">
+            <header className="absolute top-0 left-0 right-0 p-6 flex items-center justify-between">
+                <Link href="/" className="flex items-center space-x-2">
+                    <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xs">K</div>
+                </Link>
+                <Link href="/salary/submit">
+                    <Button className="text-sm font-bold">
+                        Submit Salary Info
+                    </Button>
+                </Link>
+            </header>
             <div className="w-full max-w-[380px] space-y-8">
                 <div className="space-y-2">
                     <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Sign in</h1>

@@ -166,7 +166,7 @@ export default function SalaryDetailsPage() {
                                 <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
                                 </svg>
-                                Vouch
+                                Upvote
                             </Button>
                             <Button
                                 onClick={() => handleVote(false)}
@@ -177,7 +177,7 @@ export default function SalaryDetailsPage() {
                                 <svg className="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                                 </svg>
-                                Dispute
+                                Downvote
                             </Button>
                         </div>
                     </div>
@@ -197,7 +197,7 @@ export default function SalaryDetailsPage() {
                                 isLoading={updatingStatus && salary.status !== 'APPROVED'}
                                 disabled={salary.status === 'APPROVED'}
                             >
-                                {salary.status === 'APPROVED' ? 'Approved' : 'Approve Submission'}
+                                Approve
                             </Button>
 
                             <Button
@@ -207,7 +207,7 @@ export default function SalaryDetailsPage() {
                                 isLoading={updatingStatus && salary.status !== 'REJECTED'}
                                 disabled={salary.status === 'REJECTED'}
                             >
-                                {salary.status === 'REJECTED' ? 'Denied' : 'Deny Submission'}
+                                Deny
                             </Button>
 
                             <Button
@@ -217,7 +217,7 @@ export default function SalaryDetailsPage() {
                                 isLoading={updatingStatus && salary.status !== 'PENDING'}
                                 disabled={salary.status === 'PENDING'}
                             >
-                                Set to Pending
+                                Pending
                             </Button>
                         </div>
                     </section>

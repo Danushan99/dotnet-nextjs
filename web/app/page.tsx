@@ -60,7 +60,6 @@ export default function Home() {
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xs uppercase tracking-tighter">
               K
             </div>
-            <span className="font-bold text-lg tracking-tight">KITHU</span>
           </div>
         </div>
 
@@ -98,7 +97,7 @@ export default function Home() {
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top Header - Mobile only */}
         <nav className="lg:hidden border-b border-zinc-200 bg-white h-16 px-6 flex items-center justify-between">
-          <div className="font-bold tracking-tighter">KITHU</div>
+          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white font-bold text-xs">K</div>
           <button className="p-2 -mr-2 text-zinc-500">
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
