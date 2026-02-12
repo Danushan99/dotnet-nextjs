@@ -13,6 +13,7 @@ export default function SalaryDetailsPage() {
     const [salary, setSalary] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [voting, setVoting] = useState(false);
+    const [updatingStatus, setUpdatingStatus] = useState(false);
     const [error, setError] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [toast, setToast] = useState('');
@@ -49,6 +50,20 @@ export default function SalaryDetailsPage() {
             setToast('Failed to record vote');
         } finally {
             setVoting(false);
+        }
+    };
+
+    const handleStatusUpdate = async (newStatus: string) => {
+        setUpdatingStatus(true);
+        try {
+            await api.patch(`/salaries/${id}/status`, { status: newStatus });
+            const response = await api.get(`/salaries/${id}`);
+            setSalary(response.data);
+            setToast(`Status updated to ${newStatus}`);
+        } catch (err) {
+            setToast('Failed to update status');
+        } finally {
+            setUpdatingStatus(false);
         }
     };
 
@@ -167,6 +182,46 @@ export default function SalaryDetailsPage() {
                         </div>
                     </div>
                 </section>
+
+                {isLoggedIn && (
+                    <section className="bg-white border border-zinc-200 p-8 lg:p-12 rounded-[40px] space-y-8">
+                        <div className="space-y-1">
+                            <h3 className="text-xl font-bold tracking-tight">Status Moderation</h3>
+                            <p className="text-zinc-500 text-sm">Update the submission status to reflect its validity.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <Button
+                                onClick={() => handleStatusUpdate('APPROVED')}
+                                className={`py-4 ${salary.status === 'APPROVED' ? 'bg-emerald-600 border-emerald-600' : 'bg-black'}`}
+                                isLoading={updatingStatus && salary.status !== 'APPROVED'}
+                                disabled={salary.status === 'APPROVED'}
+                            >
+                                {salary.status === 'APPROVED' ? 'Approved' : 'Approve Submission'}
+                            </Button>
+
+                            <Button
+                                onClick={() => handleStatusUpdate('REJECTED')}
+                                variant="outline"
+                                className={`py-4 border-red-200 text-red-600 hover:bg-red-50 ${salary.status === 'REJECTED' ? 'bg-red-50 border-red-300' : ''}`}
+                                isLoading={updatingStatus && salary.status !== 'REJECTED'}
+                                disabled={salary.status === 'REJECTED'}
+                            >
+                                {salary.status === 'REJECTED' ? 'Denied' : 'Deny Submission'}
+                            </Button>
+
+                            <Button
+                                onClick={() => handleStatusUpdate('PENDING')}
+                                variant="ghost"
+                                className={`py-4 text-zinc-500 hover:text-black ${salary.status === 'PENDING' ? 'bg-zinc-100' : ''}`}
+                                isLoading={updatingStatus && salary.status !== 'PENDING'}
+                                disabled={salary.status === 'PENDING'}
+                            >
+                                Set to Pending
+                            </Button>
+                        </div>
+                    </section>
+                )}
 
                 <footer className="pt-12 border-t border-zinc-100 flex flex-col items-center space-y-4">
                     <p className="text-zinc-400 text-sm font-medium">Shared on {new Date(salary.submittedAt).toLocaleDateString()}</p>
