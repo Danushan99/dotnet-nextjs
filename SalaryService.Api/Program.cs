@@ -78,13 +78,14 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
-// CORS for Next.js (assuming localhost:3000)
+// CORS for Next.js (must specify origin when using credentials)
 app.UseCors(x => x
-    .AllowAnyOrigin()
+    .WithOrigins("http://localhost:3000")
     .AllowAnyMethod()
-    .AllowAnyHeader());
+    .AllowAnyHeader()
+    .AllowCredentials());  // Required for httpOnly cookies
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -103,9 +104,13 @@ using (var scope = app.Services.CreateScope())
                 ""Id"" uuid NOT NULL CONSTRAINT ""PK_Users"" PRIMARY KEY,
                 ""Email"" text NOT NULL,
                 ""PasswordHash"" text NOT NULL,
-                ""Username"" text NOT NULL,
+                ""Username"" text,
                 ""CreatedAt"" timestamp with time zone NOT NULL
             );
+
+            -- Ensure Username is NULLABLE 
+            ALTER TABLE ""Users"" ALTER COLUMN ""Username"" DROP NOT NULL;
+
             CREATE UNIQUE INDEX IF NOT EXISTS ""IX_Users_Email"" ON ""Users"" (""Email"");
 
             CREATE TABLE IF NOT EXISTS ""SalarySubmissions"" (

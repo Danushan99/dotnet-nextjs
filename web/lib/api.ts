@@ -25,7 +25,12 @@ const addAuthToken = (config: InternalAxiosRequestConfig) => {
 const handleAuthError = async (error: any) => {
   const originalRequest = error.config;
 
-  if (error.response?.status === 401 && !originalRequest._retry) {
+  // Don't retry for login, signup, or refresh endpoints to avoid infinite loops
+  const isAuthRequest = originalRequest.url?.includes('/auth/login') ||
+    originalRequest.url?.includes('/auth/signup') ||
+    originalRequest.url?.includes('/auth/refresh');
+
+  if (error.response?.status === 401 && !originalRequest._retry && !isAuthRequest) {
     originalRequest._retry = true;
 
     try {
