@@ -1,7 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace IdentityService.Api.Models;
 
+[Table("SalarySubmissions")]
 public class SalarySubmission
 {
     public Guid Id { get; set; } = Guid.NewGuid();

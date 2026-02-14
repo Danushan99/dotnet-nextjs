@@ -51,10 +51,6 @@ public class SalariesController : ControllerBase
         var salary = await _context.SalarySubmissions.FindAsync(id);
         if (salary == null) return NotFound();
 
-        // Calculate votes
-        var upvotes = await _context.SalaryVotes.CountAsync(v => v.SalarySubmissionId == id && v.IsUpvote);
-        var downvotes = await _context.SalaryVotes.CountAsync(v => v.SalarySubmissionId == id && !v.IsUpvote);
-
         // Respect anonymity
         var response = new
         {
@@ -69,46 +65,10 @@ public class SalariesController : ControllerBase
             salary.Period,
             salary.IsAnonymous,
             salary.Status,
-            salary.SubmittedAt,
-            Upvotes = upvotes,
-            Downvotes = downvotes,
-            TrustScore = upvotes - downvotes
+            salary.SubmittedAt
         };
 
         return Ok(response);
-    }
-
-    [HttpPost("{id}/vote")]
-    [Authorize]
-    public async Task<IActionResult> Vote(Guid id, [FromBody] VoteRequest request)
-    {
-        var salary = await _context.SalarySubmissions.FindAsync(id);
-        if (salary == null) return NotFound();
-
-        var userEmail = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (string.IsNullOrEmpty(userEmail)) return Unauthorized();
-
-        // Check if user already voted
-        var existingVote = await _context.SalaryVotes
-            .FirstOrDefaultAsync(v => v.SalarySubmissionId == id && v.UserEmail == userEmail);
-
-        if (existingVote != null)
-        {
-            existingVote.IsUpvote = request.IsUpvote;
-            existingVote.VotedAt = DateTime.UtcNow;
-        }
-        else
-        {
-            _context.SalaryVotes.Add(new SalaryVote
-            {
-                SalarySubmissionId = id,
-                UserEmail = userEmail,
-                IsUpvote = request.IsUpvote
-            });
-        }
-
-        await _context.SaveChangesAsync();
-        return Ok(new { message = "Vote recorded" });
     }
 
     [HttpGet("stats")]
@@ -176,7 +136,3 @@ public class StatusUpdateRequest
     public string Status { get; set; } = "APPROVED"; // APPROVED, REJECTED, PENDING
 }
 
-public class VoteRequest
-{
-    public bool IsUpvote { get; set; }
-}
